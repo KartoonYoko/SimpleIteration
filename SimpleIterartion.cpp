@@ -63,17 +63,10 @@ vector<double> MethodOfIteration(const vector<vector<double>>& matrix, const int
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				if (i != j) {
-					double h1 = prevAns[j];
-					double h2 = bufMat[i][j];
 					recAns[i] += prevAns[j] * bufMat[i][j];
-					double h3 = recAns[i];
-					int ar = 0;
 				}
 				else {
 					recAns[i] += bufMat[i][j];
-					double h1 = recAns[i];
-					double h2 = bufMat[i][j];
-					int ar = 0;
 				}
 			}
 		}
@@ -112,7 +105,7 @@ vector<double> MethodOfZeidel(const vector<vector<double>>& matrix, const int& n
 			}
 		}
 		
-	} while (CompareTwoVectors(recAns, prevAns, n, 0.001));
+	} while (!CompareTwoVectors(recAns, prevAns, n, 0.001));
 	return recAns;
 }
 
@@ -160,9 +153,28 @@ int main()
 	matrix[4][5] = 42;
 
 	outm(matrix, n);
-	answer = MethodOfIteration(matrix, n);
 
+	cout << "________________________Methof of iteration_________________________";
+	answer = MethodOfIteration(matrix, n);
 	cout << endl << answer[0] << " " << answer[1] << " " << answer[2] << " " << answer[3] << " " << answer[4] << endl;
+
+	nevyaz = matrix;
+	for (int i = 0; i < n; i++) {
+		buf = 0;
+		for (int j = 0; j < n; j++) {
+			buf += nevyaz[i][j] * answer[j];
+		}
+		if (abs(nevyaz[i][n] - buf) > eps) cout << "Not required accuracy in line " << i << endl;
+		else cout << "There is required accuracy in line " << i << endl;
+	}
+
+
+
+
+	cout << "________________________Methof of Zeidel_________________________";
+	answer = MethodOfZeidel(matrix, n);
+	cout << endl << answer[0] << " " << answer[1] << " " << answer[2] << " " << answer[3] << " " << answer[4] << endl;
+
 	nevyaz = matrix;
 	for (int i = 0; i < n; i++) {
 		buf = 0;
