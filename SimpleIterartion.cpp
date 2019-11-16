@@ -2,7 +2,7 @@
 #include <vector>
 #include <math.h>
 #include <iomanip>
-
+#include "../../oop/Classes/tryToMatrix.h"
 using namespace std;
 
 
@@ -110,6 +110,15 @@ vector<double> MethodOfZeidel(const vector<vector<double>>& matrix, const int& n
 }
 
 
+
+	MyMatrix methodOfBlocking(const MyMatrix& matrix) {
+		MyMatrix result(matrix.getRow(), matrix.getCol());
+
+
+
+		return result;
+	}
+
 int main()
 {
 
@@ -120,71 +129,89 @@ int main()
 	double buf, buf2;
 	double eps = 1 * pow(10, -2);
 
-	matrix[0][1] = 6;
-	matrix[1][1] = 25;
-	matrix[2][1] = -1;
-	matrix[3][1] = 5;
-	matrix[4][1] = 8;
-	matrix[0][2] = 5;
-	matrix[1][2] = -9;
-	matrix[2][2] = 24;
-	matrix[3][2] = -6;
-	matrix[4][2] = -7;
-	matrix[0][3] = 1;
-	matrix[1][3] = -6;
-	matrix[2][3] = 4;
-	matrix[3][3] = 33;
-	matrix[4][3] = 8;
-	matrix[0][4] = -2;
-	matrix[1][4] = 0;
-	matrix[2][4] = -9;
-	matrix[3][4] = 9;
-	matrix[4][4] = 38;
-	matrix[0][0] = 25;
-	matrix[1][0] = 3;
-	matrix[2][0] = -2;
-	matrix[3][0] = 2;
-	matrix[4][0] = -5;
-				   
-	matrix[0][5] = 35;
-	matrix[1][5] = 26;
-	matrix[2][5] = 48;
-	matrix[3][5] = 86;
-	matrix[4][5] = 42;
+
+
+	//Описание матрицы
+	{
+		matrix[0][1] = 6;
+		matrix[1][1] = 25;
+		matrix[2][1] = -1;
+		matrix[3][1] = 5;
+		matrix[4][1] = 8;
+		matrix[0][2] = 5;
+		matrix[1][2] = -9;
+		matrix[2][2] = 24;
+		matrix[3][2] = -6;
+		matrix[4][2] = -7;
+		matrix[0][3] = 1;
+		matrix[1][3] = -6;
+		matrix[2][3] = 4;
+		matrix[3][3] = 33;
+		matrix[4][3] = 8;
+		matrix[0][4] = -2;
+		matrix[1][4] = 0;
+		matrix[2][4] = -9;
+		matrix[3][4] = 9;
+		matrix[4][4] = 38;
+		matrix[0][0] = 25;
+		matrix[1][0] = 3;
+		matrix[2][0] = -2;
+		matrix[3][0] = 2;
+		matrix[4][0] = -5;
+
+		matrix[0][5] = 35;
+		matrix[1][5] = 26;
+		matrix[2][5] = 48;
+		matrix[3][5] = 86;
+		matrix[4][5] = 42;
+	}
 
 	outm(matrix, n);
 
-	cout << "________________________Methof of iteration_________________________";
-	answer = MethodOfIteration(matrix, n);
-	cout << endl << answer[0] << " " << answer[1] << " " << answer[2] << " " << answer[3] << " " << answer[4] << endl;
+	cout << "________________________Methof of iteration_________________________" << endl;
+	{
+		answer = MethodOfIteration(matrix, n);
+		cout << endl << answer[0] << " " << answer[1] << " " << answer[2] << " " << answer[3] << " " << answer[4] << endl;
 
-	nevyaz = matrix;
-	for (int i = 0; i < n; i++) {
-		buf = 0;
-		for (int j = 0; j < n; j++) {
-			buf += nevyaz[i][j] * answer[j];
+		nevyaz = matrix;
+		for (int i = 0; i < n; i++) {
+			buf = 0;
+			for (int j = 0; j < n; j++) {
+				buf += nevyaz[i][j] * answer[j];
+			}
+			if (abs(nevyaz[i][n] - buf) > eps) cout << "Not required accuracy in line " << i << endl;
+			else cout << "There is required accuracy in line " << i << endl;
 		}
-		if (abs(nevyaz[i][n] - buf) > eps) cout << "Not required accuracy in line " << i << endl;
-		else cout << "There is required accuracy in line " << i << endl;
+
+	}
+	
+
+	cout << "________________________Methof of Zeidel_________________________" << endl;
+	{
+		answer = MethodOfZeidel(matrix, n);
+		cout << endl << answer[0] << " " << answer[1] << " " << answer[2] << " " << answer[3] << " " << answer[4] << endl;
+
+		nevyaz = matrix;
+		for (int i = 0; i < n; i++) {
+			buf = 0;
+			for (int j = 0; j < n; j++) {
+				buf += nevyaz[i][j] * answer[j];
+			}
+			if (abs(nevyaz[i][n] - buf) > eps) cout << "Not required accuracy in line " << i << endl;
+			else cout << "There is required accuracy in line " << i << endl;
+		}
+
 	}
 
 
-
-
-	cout << "________________________Methof of Zeidel_________________________";
-	answer = MethodOfZeidel(matrix, n);
-	cout << endl << answer[0] << " " << answer[1] << " " << answer[2] << " " << answer[3] << " " << answer[4] << endl;
-
-	nevyaz = matrix;
-	for (int i = 0; i < n; i++) {
-		buf = 0;
-		for (int j = 0; j < n; j++) {
-			buf += nevyaz[i][j] * answer[j];
-		}
-		if (abs(nevyaz[i][n] - buf) > eps) cout << "Not required accuracy in line " << i << endl;
-		else cout << "There is required accuracy in line " << i << endl;
+	cout << "________________________Methof of blocking_________________________" << endl;
+	{
+		MyMatrix a(4, 4);
+		a[0] = { -1,2,2,-1 };
+		a[1] = { -2,3,4,-3 };
+		a[2] = { 2,-3,-3,5 };
+		a[3] = { -2,2,4,-3 };
+		a.outputConsole();
+	
 	}
-
-
-
 }
