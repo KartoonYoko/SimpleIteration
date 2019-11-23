@@ -111,12 +111,74 @@ vector<double> MethodOfZeidel(const vector<vector<double>>& matrix, const int& n
 
 
 
-	MyMatrix methodOfBlocking(const MyMatrix& matrix) {
-		MyMatrix result(matrix.getRow(), matrix.getCol());
+	void methodOfBlocking(const MyMatrix& matrix) {
+		MyMatrix result(matrix.getRowCount(), matrix.getColCount());
+		MyMatrix m(2, 2), n(2, 2), p(2, 2), q(2, 2);
+		MyMatrix x(2, 2), v(2, 2), u(2, 2), y(2, 2);
+		int i1 = 0, j1 = 0;
 
+		for(int i = 0; i < 2; i++)
+			for (int j = 0; j < 2; j++) {
+				m(i, j) = matrix.getItem(i, j);
+			}
+		for (int i = 0; i < 2; i++)
+			for (int j = 2; j < 4; j++) {
+				n(i1, j1) = matrix.getItem(i, j);
+				if (j1 == 1) {
+					j1 = 0;
+					if (i1 == 1) i1 = 0; else i1++;
+				}
+				else j1++;
+			}
+		i1 = 0; j1 = 0;
+		for (int i = 2; i < 4; i++)
+			for (int j = 0; j < 2; j++) {
+				p(i1, j1) = matrix.getItem(i, j);
+				if (j1 == 1) {
+					j1 = 0;
+					if (i1 == 1) i1 = 0; else i1++;
+				}
+				else j1++;
+			}
+		i1 = 0; j1 = 0;
+		for (int i = 2; i < 4; i++)
+			for (int j = 2; j < 4; j++) {
+				q(i1, j1) = matrix.getItem(i, j);
+				if (j1 == 1) {
+					j1 = 0;
+					if (i1 == 1) i1 = 0; else i1++;
+				}
+				else j1++;
+			}
+		
+		
+		x = (m - n * (q.invertMatrix()) * p);
+		x = x.invertMatrix();
+		
+		v = (q - (p * m.invertMatrix()) * n);
+		v = v.invertMatrix();
+		
+		u = (v * -1) * p * m.invertMatrix();
+		
+		y = (x * -1) * n * q.invertMatrix();
+		
+		cout << "X:" << endl;
+		x.outputConsole();
+		cout << endl;
 
+		cout << "Y:" << endl;
+		y.outputConsole();
+		cout << endl;
 
-		return result;
+		cout << "U:" << endl;
+		u.outputConsole();
+		cout << endl;
+
+		cout << "V:" << endl;
+		v.outputConsole();
+		cout << endl;
+		
+		
 	}
 
 int main()
@@ -207,11 +269,35 @@ int main()
 	cout << "________________________Methof of blocking_________________________" << endl;
 	{
 		MyMatrix a(4, 4);
-		a[0] = { -1,2,2,-1 };
-		a[1] = { -2,3,4,-3 };
-		a[2] = { 2,-3,-3,5 };
-		a[3] = { -2,2,4,-3 };
+
+		//Описание матрицы
+		{
+			a[0] = { -1,  2,  2, -1 };
+			a[1] = { -2,  3,  4, -3 };
+			a[2] = {  2, -3, -3,  5 };
+			a[3] = { -2,  2,  4, -3 };
+			/*
+			a(0, 0) = -1;	a(0, 1) = 2;	a(0, 2) = 2;	a(0, 3) = -1;
+			a(1, 0) = -2;	a(1, 1) = 3;	a(1, 2) = 4;	a(1, 3) = -3;
+			a(2, 0) = 2;	a(2, 1) = -3;	a(2, 2) = -3;	a(2, 3) = 5;
+			a(3, 0) = -2;	a(3, 1) = 2;	a(3, 2) = 4;	a(3, 3) = -3;
+			*/
+		}
+
+		
+		cout << "Matrix A: " << endl;
 		a.outputConsole();
+		cout << endl;
+
+
+		MyMatrix invert(4, 4);
+		invert = a.invertMatrix();
+		cout << "Invert: " << endl;
+		invert.outputConsole();
+		cout << endl;
+
+		methodOfBlocking(a);
+		
 	
 	}
 }
